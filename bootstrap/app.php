@@ -9,6 +9,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\AuthenticationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -33,6 +34,17 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => "{$model} không tìm thấy.",
                     'data'    => null,
                 ], 404);
+            }
+        });
+
+        // MethodNotAllowedHttpException → 405 JSON
+        $exceptions->render(function (MethodNotAllowedHttpException $e, Request $request) {
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Phương thức HTTP không được phép cho endpoint này.',
+                    'data'    => null,
+                ], 405);
             }
         });
 
