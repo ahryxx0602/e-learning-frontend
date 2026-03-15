@@ -44,5 +44,7 @@ handbook.md
 Promt-set-up/
 .agents/
 handbook.md
+.env
+.env.*
+!.env.example
 
-QLCV/
