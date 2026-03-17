@@ -3,7 +3,7 @@
 namespace Modules\Users\Repositories;
 
 use App\Repositories\BaseRepository;
-use Modules\Users\Models\Users;
+use Modules\Users\Models\User;
 
 /**
  * Class UsersRepository
@@ -14,7 +14,7 @@ use Modules\Users\Models\Users;
  */
 class UsersRepository extends BaseRepository implements UsersRepositoryInterface
 {
-    public function __construct(Users $model)
+    public function __construct(User $model)
     {
         parent::__construct($model);
     }

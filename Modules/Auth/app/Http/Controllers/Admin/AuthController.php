@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Modules\Auth\Http\Requests\AdminLoginRequest;
-use Modules\Auth\Models\User;
+use Modules\Users\Models\User;
 
 /**
  * Admin AuthController

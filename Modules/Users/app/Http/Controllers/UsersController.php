@@ -26,49 +26,94 @@ class UsersController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $perPage = (int) $request->query('per_page', 15);
+        $perPage = (int)$request->query('per_page', 15);
         $data = $this->repository->paginate($perPage);
 
         return $this->paginated($data);
     }
 
     /**
-     * Tạo mới Users.
+     * Tạo mới User + gán role.
      */
     public function store(StoreUsersRequest $request): JsonResponse
     {
-        $data = $this->repository->create($request->validated());
+        $user = $this->repository->create($request->validated());
 
-        return $this->success($data, 'Users đã được tạo thành công.', 201);
+        if ($request->filled('role')) {
+            $user->assignRole($request->role);
+        }
+
+        $user->load('roles');
+
+        return $this->success($user, 'User đã được tạo thành công.', 201);
     }
 
     /**
-     * Chi tiết Users.
+     * Chi tiết User.
      */
     public function show(int $id): JsonResponse
     {
-        $data = $this->repository->findOrFail($id);
+        $user = $this->repository->findOrFail($id);
+        $user->load('roles', 'permissions');
 
-        return $this->success($data);
+        return $this->success($user);
     }
 
     /**
-     * Cập nhật Users.
+     * Cập nhật User + đổi role.
      */
     public function update(UpdateUsersRequest $request, int $id): JsonResponse
     {
-        $data = $this->repository->update($id, $request->validated());
+        $user = $this->repository->update($id, $request->validated());
 
-        return $this->success($data, 'Users đã được cập nhật thành công.');
+        if ($request->filled('role')) {
+            $user->syncRoles([$request->role]);
+        }
+
+        $user->load('roles');
+
+        return $this->success($user, 'User đã được cập nhật thành công.');
     }
 
     /**
-     * Xoá Users.
+     * Xoá User (soft delete).
      */
     public function destroy(int $id): JsonResponse
     {
         $this->repository->delete($id);
 
-        return $this->success(null, 'Users đã được xoá thành công.');
+        return $this->success(null, 'User đã được xoá thành công.');
+    }
+
+    /**
+     * Gán role cho User.
+     */
+    public function assignRole(Request $request, int $id): JsonResponse
+    {
+        $request->validate([
+            'role' => 'required|string|exists:roles,name',
+        ]);
+
+        $user = $this->repository->findOrFail($id);
+        $user->assignRole($request->role);
+        $user->load('roles');
+
+        return $this->success($user, 'Gán role thành công.');
+    }
+
+    /**
+     * Thu hồi role của User.
+     */
+    public function revokeRole(Request $request, int $id): JsonResponse
+    {
+        $request->validate([
+            'role' => 'required|string|exists:roles,name',
+        ]);
+
+        $user = $this->repository->findOrFail($id);
+        $user->removeRole($request->role);
+        $user->load('roles');
+
+        return $this->success($user, 'Thu hồi role thành công.');
     }
 }
