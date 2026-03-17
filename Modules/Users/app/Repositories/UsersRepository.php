@@ -18,4 +18,15 @@ class UsersRepository extends BaseRepository implements UsersRepositoryInterface
     {
         parent::__construct($model);
     }
+
+    public function assignRoleMany(array $ids, string $role): int
+    {
+        $users = $this->model->whereIn('id', $ids)->get();
+
+        foreach ($users as $user) {
+            $user->syncRoles([$role]);
+        }
+
+        return $users->count();
+    }
 }

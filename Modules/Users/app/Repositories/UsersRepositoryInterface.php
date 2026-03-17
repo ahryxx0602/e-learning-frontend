@@ -13,5 +13,12 @@ use App\Repositories\RepositoryInterface;
  */
 interface UsersRepositoryInterface extends RepositoryInterface
 {
-    //
+    /**
+     * Gán role cho nhiều users cùng lúc.
+     *
+     * @param  array<int>  $ids
+     * @param  string      $role
+     * @return int  Số lượng user được cập nhật
+     */
+    public function assignRoleMany(array $ids, string $role): int;
 }

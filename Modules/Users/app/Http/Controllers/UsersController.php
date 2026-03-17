@@ -13,7 +13,6 @@ use Modules\Users\Http\Requests\BulkForceDeleteUsersRequest;
 use Modules\Users\Http\Requests\BulkRestoreUsersRequest;
 use Modules\Users\Http\Requests\StoreUsersRequest;
 use Modules\Users\Http\Requests\UpdateUsersRequest;
-use Modules\Users\Models\User;
 use Modules\Users\Repositories\UsersRepositoryInterface;
 
 class UsersController extends Controller
@@ -131,7 +130,7 @@ class UsersController extends Controller
         $deleted = $this->repository->deleteMany($request->ids);
 
         return $this->success(
-            ['deleted_count' => $deleted, 'deleted_ids' => $request->ids],
+        ['deleted_count' => $deleted, 'deleted_ids' => $request->ids],
             "Đã xoá {$deleted} user thành công."
         );
     }
@@ -144,7 +143,7 @@ class UsersController extends Controller
         $affected = $this->repository->actionMany($request->ids, $request->action);
 
         return $this->success(
-            ['affected_count' => $affected, 'affected_ids' => $request->ids],
+        ['affected_count' => $affected, 'affected_ids' => $request->ids],
             "Đã thực hiện '{$request->action}' cho {$affected} user thành công."
         );
     }
@@ -154,7 +153,7 @@ class UsersController extends Controller
      */
     public function trashed(Request $request): JsonResponse
     {
-        $perPage = (int) $request->query('per_page', 15);
+        $perPage = (int)$request->query('per_page', 15);
         $data = $this->repository->paginateTrashed($perPage, ['*'], ['roles']);
 
         return $this->paginated($data);
@@ -178,7 +177,7 @@ class UsersController extends Controller
         $restored = $this->repository->restoreMany($request->ids);
 
         return $this->success(
-            ['restored_count' => $restored, 'restored_ids' => $request->ids],
+        ['restored_count' => $restored, 'restored_ids' => $request->ids],
             "Đã khôi phục {$restored} user thành công."
         );
     }
@@ -201,7 +200,7 @@ class UsersController extends Controller
         $deleted = $this->repository->forceDeleteMany($request->ids);
 
         return $this->success(
-            ['deleted_count' => $deleted, 'deleted_ids' => $request->ids],
+        ['deleted_count' => $deleted, 'deleted_ids' => $request->ids],
             "Đã xoá vĩnh viễn {$deleted} user."
         );
     }
@@ -211,15 +210,11 @@ class UsersController extends Controller
      */
     public function bulkAssignRole(BulkAssignRoleRequest $request): JsonResponse
     {
-        $users = User::whereIn('id', $request->ids)->get();
-
-        foreach ($users as $user) {
-            $user->syncRoles([$request->role]);
-        }
+        $affected = $this->repository->assignRoleMany($request->ids, $request->role);
 
         return $this->success(
-            ['affected_count' => $users->count()],
-            "Đã gán role '{$request->role}' cho {$users->count()} user thành công."
+        ['affected_count' => $affected],
+            "Đã gán role '{$request->role}' cho {$affected} user thành công."
         );
     }
 }
