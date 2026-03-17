@@ -142,6 +142,84 @@ class BaseRepository implements RepositoryInterface
     /**
      * {@inheritDoc}
      *
+     * Force delete một bản ghi (xoá vĩnh viễn khỏi DB).
+     * Bao gồm cả bản ghi đã soft-delete và chưa soft-delete.
+     *
+     * @throws ModelNotFoundException
+     */
+    public function forceDeleteById(int $id): bool
+    {
+        $record = $this->model->newQuery()->withTrashed()->findOrFail($id);
+
+        return (bool) $record->forceDelete();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Force delete nhiều bản ghi (xoá vĩnh viễn khỏi DB).
+     * Bao gồm cả bản ghi đã soft-delete và chưa soft-delete.
+     */
+    public function forceDeleteMany(array $ids): int
+    {
+        $count = 0;
+
+        $records = $this->model->newQuery()->withTrashed()->whereIn('id', $ids)->get();
+
+        foreach ($records as $record) {
+            if ($record->forceDelete()) {
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Lấy danh sách bản ghi đã soft-delete, phân trang.
+     */
+    public function paginateTrashed(int $perPage = 15, array $columns = ['*'], array $relations = []): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
+        $perPage = max(1, min($perPage, static::MAX_PER_PAGE));
+
+        return $this->model->newQuery()
+            ->onlyTrashed()
+            ->with($relations)
+            ->paginate($perPage, $columns);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Khôi phục một bản ghi đã soft-delete.
+     *
+     * @throws ModelNotFoundException
+     */
+    public function restore(int $id): bool
+    {
+        $record = $this->model->newQuery()->onlyTrashed()->findOrFail($id);
+
+        return (bool) $record->restore();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Khôi phục nhiều bản ghi đã soft-delete.
+     */
+    public function restoreMany(array $ids): int
+    {
+        return $this->model->newQuery()
+            ->onlyTrashed()
+            ->whereIn('id', $ids)
+            ->restore();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * Mapping action → field update. Module con có thể override để thêm action.
      * Các action mặc định: activate, deactivate, publish, unpublish, archive.
      *

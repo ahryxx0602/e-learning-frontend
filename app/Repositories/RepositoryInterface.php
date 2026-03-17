@@ -86,6 +86,54 @@ interface RepositoryInterface
     public function deleteMany(array $ids): int;
 
     /**
+     * Xoá vĩnh viễn (force delete) một bản ghi theo ID.
+     * Chỉ áp dụng cho Model dùng SoftDeletes.
+     *
+     * @param  int  $id
+     * @return bool
+     *
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     */
+    public function forceDeleteById(int $id): bool;
+
+    /**
+     * Xoá vĩnh viễn (force delete) nhiều bản ghi theo mảng IDs.
+     * Chỉ áp dụng cho Model dùng SoftDeletes.
+     *
+     * @param  array  $ids
+     * @return int    Số bản ghi đã xoá vĩnh viễn
+     */
+    public function forceDeleteMany(array $ids): int;
+
+    /**
+     * Lấy danh sách bản ghi đã bị soft-delete (phân trang).
+     *
+     * @param  int    $perPage
+     * @param  array  $columns
+     * @param  array  $relations
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function paginateTrashed(int $perPage = 15, array $columns = ['*'], array $relations = []): \Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
+    /**
+     * Khôi phục (restore) một bản ghi đã soft-delete theo ID.
+     *
+     * @param  int  $id
+     * @return bool
+     *
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     */
+    public function restore(int $id): bool;
+
+    /**
+     * Khôi phục (restore) nhiều bản ghi đã soft-delete theo mảng IDs.
+     *
+     * @param  array  $ids
+     * @return int    Số bản ghi đã khôi phục
+     */
+    public function restoreMany(array $ids): int;
+
+    /**
      * Thực hiện hành động hàng loạt trên nhiều bản ghi.
      * Ví dụ: activate, deactivate, publish, archive...
      *
