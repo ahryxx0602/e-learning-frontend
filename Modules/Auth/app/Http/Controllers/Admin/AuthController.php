@@ -50,9 +50,9 @@ class AuthController extends Controller
 
         return $this->success([
             'token' => $token,
-            'user'  => [
-                'id'    => $user->id,
-                'name'  => $user->name,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
                 'email' => $user->email,
             ],
         ], 'Đăng nhập thành công.');
@@ -85,9 +85,9 @@ class AuthController extends Controller
         $user = $request->user();
 
         return $this->success([
-            'id'         => $user->id,
-            'name'       => $user->name,
-            'email'      => $user->email,
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
             'created_at' => $user->created_at,
         ]);
     }

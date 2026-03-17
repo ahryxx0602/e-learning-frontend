@@ -39,7 +39,10 @@
             "Modules\\User\\Database\\Seeders\\": "Modules/User/database/seeders/",
             "Modules\\Auth\\": "Modules/Auth/app/",
             "Modules\\Auth\\Database\\Factories\\": "Modules/Auth/database/factories/",
-            "Modules\\Auth\\Database\\Seeders\\": "Modules/Auth/database/seeders/"
+            "Modules\\Auth\\Database\\Seeders\\": "Modules/Auth/database/seeders/",
+            "Modules\\Users\\": "Modules/Users/app/",
+            "Modules\\Users\\Database\\Factories\\": "Modules/Users/database/factories/",
+            "Modules\\Users\\Database\\Seeders\\": "Modules/Users/database/seeders/"
         }
     },
     "autoload-dev": {
