@@ -10,12 +10,5 @@ namespace Modules\Teachers\Helpers;
  */
 class TeachersHelper
 {
-    /**
-     * Ví dụ: format dữ liệu Teachers.
-     * TODO: Thêm các helper methods cần thiết.
-     */
-    public static function formatTeachersData(array $data): array
-    {
-        return $data;
-    }
+//
 }

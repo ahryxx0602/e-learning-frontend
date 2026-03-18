@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Modules\Teachers\Http\Requests\BulkDeleteTeachersRequest;
 use Modules\Teachers\Http\Requests\BulkForceDeleteTeachersRequest;
 use Modules\Teachers\Http\Requests\BulkRestoreTeachersRequest;
@@ -32,6 +33,12 @@ class TeachersController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
+        $request->validate([
+            'search'   => 'nullable|string|max:100',
+            'status'   => 'nullable|integer|in:0,1',
+            'per_page' => 'nullable|integer|min:1|max:100',
+        ]);
+
         $perPage = (int) $request->query('per_page', 15);
         $filters = $request->only(['search', 'status']);
 
@@ -101,6 +108,10 @@ class TeachersController extends Controller
      */
     public function trashed(Request $request): JsonResponse
     {
+        $request->validate([
+            'per_page' => 'nullable|integer|min:1|max:100',
+        ]);
+
         $perPage = (int) $request->query('per_page', 15);
         $data = $this->repository->paginateTrashed($perPage);
         $data->setCollection(TeacherResource::collection($data->getCollection())->collection);
@@ -132,10 +143,13 @@ class TeachersController extends Controller
 
     /**
      * Xoá nhiều Teachers (soft delete).
+     * Bọc trong DB::transaction() để đảm bảo tính toàn vẹn dữ liệu.
      */
     public function bulkDelete(BulkDeleteTeachersRequest $request): JsonResponse
     {
-        $deleted = $this->repository->deleteMany($request->ids);
+        $deleted = DB::transaction(function () use ($request) {
+            return $this->repository->deleteMany($request->ids);
+        });
 
         return $this->success(
             ['deleted_count' => $deleted, 'deleted_ids' => $request->ids],
@@ -145,10 +159,13 @@ class TeachersController extends Controller
 
     /**
      * Khôi phục nhiều Teachers đã soft-delete.
+     * Bọc trong DB::transaction() để đảm bảo tính toàn vẹn dữ liệu.
      */
     public function bulkRestore(BulkRestoreTeachersRequest $request): JsonResponse
     {
-        $restored = $this->repository->restoreMany($request->ids);
+        $restored = DB::transaction(function () use ($request) {
+            return $this->repository->restoreMany($request->ids);
+        });
 
         return $this->success(
             ['restored_count' => $restored, 'restored_ids' => $request->ids],
@@ -158,10 +175,13 @@ class TeachersController extends Controller
 
     /**
      * Xoá vĩnh viễn nhiều Teachers.
+     * Bọc trong DB::transaction() để đảm bảo tính toàn vẹn dữ liệu.
      */
     public function bulkForceDelete(BulkForceDeleteTeachersRequest $request): JsonResponse
     {
-        $deleted = $this->repository->forceDeleteMany($request->ids);
+        $deleted = DB::transaction(function () use ($request) {
+            return $this->repository->forceDeleteMany($request->ids);
+        });
 
         return $this->success(
             ['deleted_count' => $deleted, 'deleted_ids' => $request->ids],
@@ -176,6 +196,11 @@ class TeachersController extends Controller
      */
     public function publicIndex(Request $request): JsonResponse
     {
+        $request->validate([
+            'search'   => 'nullable|string|max:100',
+            'per_page' => 'nullable|integer|min:1|max:100',
+        ]);
+
         $perPage = (int) $request->query('per_page', 15);
         $filters = $request->only(['search']);
 
@@ -190,6 +215,10 @@ class TeachersController extends Controller
      */
     public function publicShow(string $slug): JsonResponse
     {
+        if (!preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $slug)) {
+            return $this->error('Giảng viên không tồn tại.', 404);
+        }
+
         $teacher = $this->repository->findBySlug($slug, true);
 
         if (!$teacher) {

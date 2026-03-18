@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('name', 100);
-            $table->dateTime('date_of_birth')->nullable;
+            $table->date('date_of_birth')->nullable();
             $table->string('slug', 100)->unique();
             $table->text('description')->nullable();
             $table->float('exp')->default(0)->comment('Số năm kinh nghiệm');
