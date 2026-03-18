@@ -2,7 +2,9 @@
 
 namespace Modules\Auth\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 /**
  * AdminLoginRequest — Validation cho endpoint đăng nhập Admin.
@@ -11,8 +13,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *   - email: bắt buộc, đúng format email, tối đa 255 ký tự
  *   - password: bắt buộc, tối thiểu 6, tối đa 100 ký tự
  *
- * Khi validation fail → Exception Handler tự trả JSON 422
- * (đã config trong bootstrap/app.php).
+ * Khi validation fail → trả JSON 422 (nhất quán với Student requests).
  */
 class AdminLoginRequest extends FormRequest
 {
@@ -50,5 +51,16 @@ class AdminLoginRequest extends FormRequest
             'password.max'      => 'Mật khẩu không được vượt quá :max ký tự.',
         ];
     }
-}
 
+    /**
+     * Override trả JSON khi validation fail (nhất quán với Student requests).
+     */
+    protected function failedValidation(Validator $validator): void
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'message' => 'Dữ liệu không hợp lệ.',
+            'errors'  => $validator->errors(),
+        ], 422));
+    }
+}
