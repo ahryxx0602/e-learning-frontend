@@ -71,5 +71,16 @@ class Category extends Model
 
 // ── Relationships ──
 
-    // Courses relationship sẽ thêm khi làm Module Courses
+    /**
+     * Category có nhiều Courses (many-to-many qua categories_courses).
+     */
+    public function courses()
+    {
+        return $this->belongsToMany(
+            \Modules\Course\Models\Course::class,
+            'categories_courses',
+            'category_id',
+            'course_id'
+        );
+    }
 }
