@@ -52,7 +52,10 @@
             "Modules\\Categories\\Database\\Seeders\\": "Modules/Categories/database/seeders/",
             "Modules\\Teachers\\": "Modules/Teachers/app/",
             "Modules\\Teachers\\Database\\Factories\\": "Modules/Teachers/database/factories/",
-            "Modules\\Teachers\\Database\\Seeders\\": "Modules/Teachers/database/seeders/"
+            "Modules\\Teachers\\Database\\Seeders\\": "Modules/Teachers/database/seeders/",
+            "Modules\\Course\\": "Modules/Course/app/",
+            "Modules\\Course\\Database\\Factories\\": "Modules/Course/database/factories/",
+            "Modules\\Course\\Database\\Seeders\\": "Modules/Course/database/seeders/"
         }
     },
     "autoload-dev": {

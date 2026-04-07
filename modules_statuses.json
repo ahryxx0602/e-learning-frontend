@@ -4,5 +4,6 @@
     "Users": true,
     "Students": true,
     "Categories": true,
-    "Teachers": true
+    "Teachers": true,
+    "Course": true
 }
