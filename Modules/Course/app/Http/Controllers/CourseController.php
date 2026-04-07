@@ -262,7 +262,6 @@ class CourseController extends Controller
 
     /**
      * Public: Danh sách bài giảng của khóa học (lock nếu chưa mua).
-     * NOTE: Method này sẽ hoàn thiện khi Module Lessons được tạo.
      */
     public function publicLessons(string $slug): JsonResponse
     {
@@ -282,14 +281,27 @@ class CourseController extends Controller
             $isPurchased = $course->students()->where('student_id', auth('api')->id())->exists();
         }
 
-        // TODO: Load lessons khi Module Lessons hoàn thành
-        // Tạm trả về thông tin cơ bản
+        // Load lessons theo trạng thái mua
+        $lessonsQuery = $course->lessons()->where('status', 1);
+
+        if (!$isPurchased) {
+            $lessonsQuery->where('is_preview', true);
+        }
+
+        $lessons = $lessonsQuery->orderBy('order', 'asc')->get()->map(fn ($lesson) => [
+            'id'         => $lesson->id,
+            'title'      => $lesson->title,
+            'slug'       => $lesson->slug,
+            'type'       => $lesson->type,
+            'order'      => $lesson->order,
+            'is_preview' => $lesson->is_preview,
+            'duration'   => $lesson->duration,
+        ])->values();
+
         return $this->success([
-            'course_id'    => $course->id,
-            'course_name'  => $course->name,
             'is_purchased' => $isPurchased,
-            'lessons'      => [], // Sẽ populate khi có Module Lessons
-        ]);
+            'lessons'      => $lessons,
+        ], 'Lấy danh sách bài giảng thành công.');
     }
 
     /**
