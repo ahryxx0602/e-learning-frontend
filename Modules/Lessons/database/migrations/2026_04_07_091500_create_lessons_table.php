@@ -28,15 +28,16 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            // Foreign keys
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
+        });
 
-            // Chỉ thêm FK video_id nếu bảng media tồn tại
-            if (Schema::hasTable('media')) {
+        // Chỉ thêm FK media nếu bảng media đã tồn tại (Module Upload có thể chưa migrate)
+        if (Schema::hasTable('media')) {
+            Schema::table('lessons', function (Blueprint $table) {
                 $table->foreign('video_id')->references('id')->on('media')->onDelete('set null');
                 $table->foreign('document_id')->references('id')->on('media')->onDelete('set null');
-            }
-        });
+            });
+        }
     }
 
     /**

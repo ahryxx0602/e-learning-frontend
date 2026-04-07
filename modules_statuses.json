@@ -6,5 +6,6 @@
     "Categories": true,
     "Teachers": true,
     "Course": true,
-    "Upload": true
+    "Upload": true,
+    "Lessons": true
 }
