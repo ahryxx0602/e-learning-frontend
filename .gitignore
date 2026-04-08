@@ -1,0 +1,98 @@
+# ============================================
+# Root .gitignore - Đồ án tốt nghiệp E-Learning
+# Chỉ push FE (e-learning-frontend) và BE (e-learning-backend)
+# ============================================
+
+# ---------- Ignore everything first ----------
+/*
+
+# ---------- Cho phép FE và BE ----------
+!e-learning-backend/
+!e-learning-frontend/
+!.gitignore
+!README.md
+
+# ---------- Thư mục/file không cần push ----------
+# Template tham khảo
+vue-tailwind-admin-dashboard-main/
+
+# Root node_modules & package files
+node_modules/
+package.json
+package-lock.json
+
+# File test/hướng dẫn
+testing_guide_by_module.md
+
+# ---------- BE: Laravel specific ----------
+e-learning-backend/.env
+e-learning-backend/.env.backup
+e-learning-backend/.env.production
+e-learning-backend/vendor/
+e-learning-backend/node_modules/
+e-learning-backend/storage/*.key
+e-learning-backend/storage/pail/
+e-learning-backend/public/build/
+e-learning-backend/public/hot/
+e-learning-backend/public/storage/
+e-learning-backend/.phpunit.cache/
+e-learning-backend/.phpunit.result.cache
+e-learning-backend/.phpactor.json
+e-learning-backend/Homestead.json
+e-learning-backend/Homestead.yaml
+e-learning-backend/auth.json
+e-learning-backend/wsl.localhost/
+
+# BE: AI/IDE files
+e-learning-backend/.agents/
+e-learning-backend/Promt-set-up/
+e-learning-backend/handbook.md
+e-learning-backend/endpoint.md
+e-learning-backend/.idea/
+e-learning-backend/.vscode/
+e-learning-backend/.fleet/
+e-learning-backend/.nova/
+e-learning-backend/.zed/
+
+# ---------- FE: Vue/Vite specific ----------
+e-learning-frontend/.env
+e-learning-frontend/.env.*
+!e-learning-frontend/.env.example
+e-learning-frontend/node_modules/
+e-learning-frontend/dist/
+e-learning-frontend/dist-ssr/
+e-learning-frontend/coverage/
+e-learning-frontend/*.local
+e-learning-frontend/*.tsbuildinfo
+e-learning-frontend/.eslintcache
+
+# FE: AI/IDE files
+e-learning-frontend/.agent/
+e-learning-frontend/Promt-set-up/
+e-learning-frontend/handbook.md
+e-learning-frontend/endpoint.md
+e-learning-frontend/test.md
+e-learning-frontend/test-progress.md
+e-learning-frontend/.idea/
+e-learning-frontend/.vscode/*
+!e-learning-frontend/.vscode/extensions.json
+
+# FE: Cypress/Vitest
+e-learning-frontend/cypress/videos/
+e-learning-frontend/cypress/screenshots/
+e-learning-frontend/__screenshots__/
+
+# ---------- Chung ----------
+# Git lồng nhau của sub-projects (Git tự bỏ qua, thêm cho rõ ràng)
+e-learning-backend/.git/
+e-learning-frontend/.git/
+
+*.log
+*.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.timestamp-*-*.mjs
