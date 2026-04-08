@@ -11,15 +11,16 @@
 !e-learning-frontend/
 !.gitignore
 !README.md
+!LICENSE
 
 # ---------- Thư mục/file không cần push ----------
 # Template tham khảo
 vue-tailwind-admin-dashboard-main/
 
-# Root node_modules & package files
-node_modules/
-package.json
-package-lock.json
+# Root node_modules & package files (/ prefix = chỉ root)
+/node_modules/
+/package.json
+/package-lock.json
 
 # File test/hướng dẫn
 testing_guide_by_module.md
