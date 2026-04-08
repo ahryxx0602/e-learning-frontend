@@ -92,7 +92,7 @@ e-learning-frontend/.git/
 *.git_bak/
 
 # WSL metadata files
-*.Zone.Identifier
+*Zone.Identifier
 
 # Laravel Scribe (API docs cache)
 e-learning-backend/.scribe/
