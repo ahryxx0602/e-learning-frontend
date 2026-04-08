@@ -88,6 +88,15 @@ e-learning-frontend/__screenshots__/
 e-learning-backend/.git/
 e-learning-frontend/.git/
 
+# Git backup (tạm ẩn khi commit)
+*.git_bak/
+
+# WSL metadata files
+*.Zone.Identifier
+
+# Laravel Scribe (API docs cache)
+e-learning-backend/.scribe/
+
 *.log
 *.DS_Store
 Thumbs.db
