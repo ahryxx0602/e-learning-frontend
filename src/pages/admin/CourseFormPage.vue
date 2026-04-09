@@ -12,9 +12,11 @@
       </router-link>
       <div>
         <h2 class="text-lg font-semibold text-gray-800 dark:text-white/90">
-          {{ isEdit ? 'Chỉnh sửa khóa học' : 'Thêm khóa học mới' }}
+          {{ isEdit ? (activeTab === 'lessons' ? 'Nội dung khóa học' : 'Thông tin khóa học') : 'Thêm khóa học mới' }}
         </h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5" v-if="isEdit">ID: {{ courseId }}</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5" v-if="isEdit">
+          {{ form.name || `ID: ${courseId}` }}
+        </p>
       </div>
     </div>
 
@@ -237,9 +239,9 @@
       </form>
     </div>
 
-    <!-- Tab: Bài giảng -->
+    <!-- Tab: Nội dung khóa học (Sections + Lessons) -->
     <div v-if="activeTab === 'lessons' && isEdit">
-      <LessonsManager :course-id="courseId ?? 0" />
+      <SectionsLessonsManager :course-id="courseId ?? 0" />
     </div>
   </div>
 </template>
@@ -252,7 +254,7 @@ import { coursesApi } from '@/api/coursesApi'
 import { categoriesApi } from '@/api/categoriesApi'
 import { teachersApi } from '@/api/teachersApi'
 import { uploadApi } from '@/api/uploadApi'
-import LessonsManager from '@/components/admin/LessonsManager.vue'
+import SectionsLessonsManager from '@/components/admin/SectionsLessonsManager.vue'
 
 const route  = useRoute()
 const router = useRouter()
@@ -260,10 +262,11 @@ const toast  = useToast()
 
 const courseId  = computed(() => route.params.id ? Number(route.params.id) : null)
 const isEdit    = computed(() => !!courseId.value)
-const activeTab = ref<'info' | 'lessons'>('info')
+const initialTab = route.query.tab === 'lessons' ? 'lessons' : 'info'
+const activeTab = ref<'info' | 'lessons'>(initialTab as 'info' | 'lessons')
 const tabs = [
   { key: 'info' as const,    label: 'Thông tin' },
-  { key: 'lessons' as const, label: 'Bài giảng' },
+  { key: 'lessons' as const, label: 'Nội dung' },
 ]
 
 const pageLoading = ref(false)
