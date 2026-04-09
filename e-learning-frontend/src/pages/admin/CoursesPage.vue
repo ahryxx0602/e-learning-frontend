@@ -714,22 +714,12 @@ async function doBulkDelete() {
 }
 
 // ── Active: Bulk toggle status ────────────────────────────────
-async function bulkToggleStatus(targetStatus: number) {
+async function bulkToggleStatus(status: number) {
   bulkUpdating.value = true
   try {
-    // Chỉ toggle các courses có status khác targetStatus
     const ids = [...selectedIds]
-    const toToggle = courses.value.filter(c => ids.includes(c.id) && c.status !== targetStatus)
-
-    if (toToggle.length === 0) {
-      toast.info('Tất cả khóa học đã ở trạng thái này')
-      selectedIds.clear()
-      bulkActionsRef.value?.closeModal()
-      return
-    }
-
-    await Promise.all(toToggle.map(c => coursesApi.toggleStatus(c.id)))
-    toast.success(`Đã cập nhật ${toToggle.length} khóa học`)
+    await Promise.all(ids.map(id => coursesApi.update(id, { status })))
+    toast.success(`Đã cập nhật ${ids.length} khóa học`)
     selectedIds.clear()
     bulkActionsRef.value?.closeModal()
     fetchPage(currentPage.value)

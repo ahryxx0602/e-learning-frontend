@@ -70,7 +70,6 @@ const router = createRouter({
     {
       path: '/courses/:slug/learn',
       component: () => import('@/pages/client/LearnPage.vue'),
-      meta: { requiresAuth: true, guard: 'student' },
     },
 
     // ── AUTH CLIENT ────────────────────────────────────────
