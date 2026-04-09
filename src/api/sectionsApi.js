@@ -37,6 +37,6 @@ export const sectionsApi = {
 
   // ── Public ─────────────────────────────────────────────────
 
-  /** GET /courses/{slug}/curriculum */
-  curriculum: (slug) => http.get(`/courses/${slug}/curriculum`),
+  /** GET /v1/courses/{slug}/curriculum */
+  curriculum: (slug) => http.get(`/v1/courses/${slug}/curriculum`),
 }
